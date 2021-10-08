@@ -3,8 +3,11 @@
 
 from PIL import Image
 
+
 # Load the image (pumpkin)
+# Open an output image that's the same size
 image = Image.open('./halloween-unsplash.jpg')
+output_image = Image.open('./halloween-unsplash.jpg')
 
 # Grab pixel information
 a_pixel = image.getpixel((0, 0))  # grab pixel (0, 0) top-left
@@ -16,6 +19,11 @@ print(a_pixel)
 image_width = image.width
 image_height = image.height
 
+# Modify the image to convert it from colour to grayscale
+# ( r, g, b ) --> ( ?, ?, ? )
+# take the r g b, add them up and divide by 3
+# replace r, g, b with that AVERAGE value
+
 # Top to bottom
 for y in range(image_height):
     # Left to right
@@ -23,8 +31,16 @@ for y in range(image_height):
         # Grab pixel information for THIS pixel
         pixel = image.getpixel((x, y))
 
-        print(f"\nPixel Location: {x}, {y}")
-        # Print pixel values
-        print(f"red: {pixel[0]}")
-        print(f"green: {pixel[1]}")
-        print(f"blue: {pixel[2]}")
+        # grab r, g, b
+        red, green, blue = pixel
+
+        # calculate the average
+        average = int((red + green + blue) / 3)
+
+        # create a gray pixel
+        gray_pixel = (average, average, average)
+
+        # put that in the new image
+        output_image.putpixel((x, y), gray_pixel)
+
+output_image.save('grayscale.jpg')
