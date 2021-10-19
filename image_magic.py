@@ -34,13 +34,13 @@ def to_greyscale(pixel: tuple, algo="average") -> tuple:
     return grey, grey, grey
 
 
-def brighter(pixel: tuple, magnitude: int) -> tuple:
+def brightness(pixel: tuple, magnitude: int) -> tuple:
     """Increases the brightness of a pixel
 
     Args:
         pixel: a 3-tuple of (red, green, blue)
             subpixels
-        magnitude: an int from 0-255 that
+        magnitude: an int from -255 to +255 that
             indicates how much to increase
             brightness
 
@@ -53,18 +53,27 @@ def brighter(pixel: tuple, magnitude: int) -> tuple:
     blue = pixel[2]
 
     MAX = 255
+    MIN = 0
 
-    # increase the value by some number
+    # add the magnitude to the r, g, b values
     if red + magnitude > MAX:
         red = MAX
+    elif red + magnitude < MIN:
+        red = MIN
     else:
         red += magnitude
+
     if green + magnitude > MAX:
         green = MAX
+    elif green + magnitude < MIN:
+        green = MIN
     else:
         green += magnitude
+
     if blue + magnitude > MAX:
         blue = MAX
+    elif blue + magnitude < MIN:
+        blue = MIN
     else:
         blue += magnitude
 
@@ -98,9 +107,9 @@ for y in range(image_height):
         # Grab pixel information for THIS pixel
         pixel = image.getpixel((x, y))
 
-        brighter_pixel = brighter(pixel, 50)
+        brighter_pixel = brightness(pixel, -100)
 
         # put that in the new image
         output_image.putpixel((x, y), brighter_pixel)
 
-output_image.save('brighterer.jpg')
+output_image.save('darker.jpg')
