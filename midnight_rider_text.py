@@ -16,6 +16,8 @@ GON GETCHU.
 
 CHOICES = """
     --- Your Choices ---
+    B. Travel moderately
+    C. Speed ahead at full speed
     D. Stop to refuel
     E. Check current status
     Q. Quit the game
