@@ -13,6 +13,7 @@ MAX_FUEL = 50
 MAX_TOFU = 3
 MAX_HUNGER = 50
 
+
 class Game:
     """Represent our game engine
 
@@ -22,7 +23,7 @@ class Game:
         distance_traveled: describe the distance
             that we've traveled so far this game,
             in km
-        amount_of_tofu: how much tofu we have
+        amount_tofu: how much tofu we have
             left in our inventory
         agents_distance: describes the distance
             between the player and the agents
@@ -115,7 +116,6 @@ class Game:
 
             # Give the user feedback
             print(midnight_rider_text.REFUEL)
-            time.sleep(2)
         elif user_choice == "e":
             print("---Status Check---")
             print(f"Distance Traveled: {self.distance_traveled} kms")
@@ -123,9 +123,9 @@ class Game:
             print(f"Tofu Pieces Left: {self.amount_tofu}")
             print(f"Agent's Distance: {abs(self.agents_distance)} kms behind")
             print("------")
-            time.sleep(2)
         elif user_choice == "q":
             self.done = True
+        time.sleep(2)
 
         # Increase hunger
         if user_choice in ["b", "c", "d"]:
@@ -137,6 +137,8 @@ class Game:
             print(midnight_rider_text.SEVERE_HUNGER)
         elif self.hunger > 25:
             print(midnight_rider_text.HUNGER)
+
+        time.sleep(1)
 
 
 def main() -> None:
@@ -150,7 +152,5 @@ def main() -> None:
         # TODO: Check win/lose conditions
 
 
-
 if __name__ == "__main__":
     main()
-
