@@ -35,3 +35,10 @@ EAT_TOFU = """-------Mmmmm. Soybean goodness.
 
 NO_TOFU = """-------You have no tofu left. 😥
 """
+
+SEVERE_HUNGER = """*******Your stomach rumbles.
+*******You need to eat something quick.
+"""
+
+HUNGER = """*******Your hunger is small but manageable.
+"""

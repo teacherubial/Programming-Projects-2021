@@ -127,9 +127,16 @@ class Game:
         elif user_choice == "q":
             self.done = True
 
+        # Increase hunger
+        if user_choice in ["b", "c", "d"]:
+            self.hunger += random.randrange(8, 18)
+
     def upkeep(self) -> None:
         """Give the user reminders of hunger"""
-        pass
+        if self.hunger > 40:
+            print(midnight_rider_text.SEVERE_HUNGER)
+        elif self.hunger > 25:
+            print(midnight_rider_text.HUNGER)
 
 
 def main() -> None:
