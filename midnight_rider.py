@@ -11,6 +11,7 @@ import midnight_rider_text
 # CONSTANTS
 MAX_FUEL = 50
 MAX_TOFU = 3
+MAX_HUNGER = 50
 
 class Game:
     """Represent our game engine
@@ -27,6 +28,9 @@ class Game:
             between the player and the agents
         fuel: describes amount of fuel remaining,
             starts off at 50
+        hunger: describes how hungry our player is,
+            represented by a number between 0-50,
+            if hunger goes beyond 50, game is over
     """
     def __init__(self):
         self.done = False
@@ -34,6 +38,7 @@ class Game:
         self.amount_tofu = MAX_TOFU
         self.agents_distance = -20
         self.fuel = MAX_FUEL
+        self.hunger = 0
 
     def introduction(self) -> None:
         """Print the introduction text"""
@@ -60,11 +65,20 @@ class Game:
 
         # Based on their choice, change the attributes
         # of the class
-        # TODO: Implement eating/hunger
+
         agents_distance_now = random.randrange(7, 15)
 
-        if user_choice == "b":
-            # Move the player
+        # TODO: Implement eating/hunger
+        if user_choice == "a":
+            if self.amount_tofu > 0:
+                self.amount_tofu -= 1
+                self.hunger = 0
+                print(midnight_rider_text.EAT_TOFU)
+            else:
+                # Tell the player they don't have tofu
+                print(midnight_rider_text.NO_TOFU)
+        elif user_choice == "b":
+            # Move the player slowly
             player_distance_now = random.randrange(5, 10)
             self.distance_traveled += player_distance_now
 
@@ -79,7 +93,7 @@ class Game:
             print(f"-------You traveled {player_distance_now} kms.\n")
 
         elif user_choice == "c":
-            # Move the player
+            # Move the player quickly
             player_distance_now = random.randrange(10, 16)
             self.distance_traveled += player_distance_now
 
@@ -113,12 +127,17 @@ class Game:
         elif user_choice == "q":
             self.done = True
 
+    def upkeep(self) -> None:
+        """Give the user reminders of hunger"""
+        pass
+
 
 def main() -> None:
     game = Game()   # starting a new game
     # game.introduction()
 
     while not game.done:
+        game.upkeep()
         game.show_choices()
         game.get_choice()
         # TODO: Check win/lose conditions
