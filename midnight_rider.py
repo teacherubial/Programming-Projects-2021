@@ -15,6 +15,7 @@ MAX_HUNGER = 50
 
 ENDGAME_REASONS = {
     "LOSE_AGENTS": 1,
+    "LOSE_FUEL": 2,
 }
 
 
@@ -61,7 +62,6 @@ class Game:
 
     def show_choices(self) -> None:
         """Show the user their choices"""
-        time.sleep(1)
         print(midnight_rider_text.CHOICES)
         time.sleep(1)
 
@@ -150,13 +150,18 @@ class Game:
     def check_endgame(self) -> None:
         """Check to see if win/lose conditions are met.
         If they're met, change the self.done flag."""
-        # TODO: LOSE - Agents catch up to the player
+
+        # LOSE - Agents catch up to you
         if self.agents_distance >= 0:
             # Allows us to quit the while loop
             self.done = True
             # Helps with printing the right ending
             self.endgame_reason = ENDGAME_REASONS["LOSE_AGENTS"]
-        # TODO: LOSE - Fuel runs out
+        # LOSE - Fuel runs out
+        if self.fuel <= 0:
+            self.done = True
+
+            self.endgame_reason = ENDGAME_REASONS["LOSE_FUEL"]
         # TODO: LOSE - Perish because of hunger
         # TODO: WIN - Reach the goal
 
@@ -177,6 +182,7 @@ def main() -> None:
     game.typewriter_effect(
         midnight_rider_text.ENDGAME_TEXT[game.endgame_reason]
     )
+
 
 if __name__ == "__main__":
     main()

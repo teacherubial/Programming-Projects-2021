@@ -36,15 +36,15 @@ EAT_TOFU = """-------Mmmmm. Soybean goodness.
 NO_TOFU = """-------You have no tofu left. 😥
 """
 
-SEVERE_HUNGER = """*******Your stomach rumbles.
+SEVERE_HUNGER = """\n*******Your stomach rumbles.
 *******You need to eat something quick.
 """
 
-HUNGER = """*******Your hunger is small but manageable.
+HUNGER = """\n*******Your hunger is small but manageable.
 """
 
 ENDGAME_TEXT = [
-    """The game has ended. Thanks for playing!""",     # Quit the game
+    """\n\nThe game has ended. Thanks for playing!""",     # Quit the game
     """\n\nTHE AGENTS HAVE CLOSED IN ON YOU.
 THERE ARE AT LEAST 20 CARS SURROUNDING YOU.
 THE LEAD CAR BUMPS YOUR PASSENGER SIDE.
@@ -76,5 +76,19 @@ IT WAS IN THE CAR THE WHOLE TIME.
 YOU DRIFT OFF INTO UNCONSCIOUSNESS...
 
 ---GAME OVER---\n""",     # LOSE - Agents have caught up
+    """\n\nYOUR CAR SPUTTERS AND SEEMS TO LET OUT
+A BIG SIGH. THERE'S NO MORE FUEL LEFT.
 
+THE AGENTS SURROUND YOU AND STEP OUT
+OF THEIR CARS. THE LEAD AGENT RIPS
+THE DOOR OPEN AND THROWS YOU OUT OF
+YOUR CAR.
+
+"WE FINALLY GOT IT."
+
+YOU FAILED.
+
+----GAME OVER----""",     # LOSE - Run out of fuel/charge
+    """""",
+    """""",
 ]
