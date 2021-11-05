@@ -16,6 +16,7 @@ MAX_HUNGER = 50
 ENDGAME_REASONS = {
     "LOSE_AGENTS": 1,
     "LOSE_FUEL": 2,
+    "LOSE_HUNGER": 3
 }
 
 
@@ -162,7 +163,11 @@ class Game:
             self.done = True
 
             self.endgame_reason = ENDGAME_REASONS["LOSE_FUEL"]
-        # TODO: LOSE - Perish because of hunger
+        # LOSE - Perish because of hunger
+        if self.hunger > MAX_HUNGER:
+            self.done = True
+
+            self.endgame_reason = ENDGAME_REASONS["LOSE_HUNGER"]
         # TODO: WIN - Reach the goal
 
 
