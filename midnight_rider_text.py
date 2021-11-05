@@ -128,3 +128,8 @@ THE MOVIES.
 ----GAME OVER----
 """,         # WIN
 ]
+
+REFILL_TOFU = """\n*******You look at your tofu container
+*******It is filled magically.
+*******"You're welcome!" says a small voice.
+*******The dog used its magic tofu cooking skills.\n"""
