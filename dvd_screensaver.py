@@ -36,8 +36,8 @@ class Dvdimage:
         self.width = 150
         self.height = 90
         self.colour = RED
-        self.x_vel = 5
-        self.y_vel = 3
+        self.x_vel = 3
+        self.y_vel = 0
 
     def rect(self) -> pygame.rect:
         """Returns a pygame.rect that represents the dvd_image"""
@@ -47,6 +47,19 @@ class Dvdimage:
         """Updates the Dvdimage with every tick"""
         # Update the x-coordinate
         self.x += self.x_vel
+        # If Dvdimage is too far to the left
+        if self.x < 0:
+            # Keep the object inside the canvas
+            self.x = 0
+            # Set the velocity to the negative
+            self.x_vel = -self.x_vel
+        # If Dvdimage is too far to the right
+        if self.x + self.width > SCREEN_WIDTH:
+            # Keep the object inside the canvas
+            self.x = SCREEN_WIDTH - self.width
+            # Set the velocity to the negative
+            self.x_vel = -self.x_vel
+
         # Update the y-coordinate
         self.y += self.y_vel
 
