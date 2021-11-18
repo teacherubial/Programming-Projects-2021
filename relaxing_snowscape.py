@@ -36,7 +36,7 @@ class Snowflake:
             random.randrange(0, SCREEN_WIDTH),
             random.randrange(0, SCREEN_HEIGHT)
         ]
-        self.y_vel = 4
+        self.y_vel = 2
         self.colour = WHITE
 
     def update(self):
