@@ -32,12 +32,18 @@ class Snowflake:
     def __init__(self):
         self.size = 2
         # randomly place the snow on the screen
-        self.coords = (
+        self.coords = [
             random.randrange(0, SCREEN_WIDTH),
             random.randrange(0, SCREEN_HEIGHT)
-        )
+        ]
         self.y_vel = 4
         self.colour = WHITE
+
+    def update(self):
+        """Update the location of the snow"""
+        # Changes the y portion of the coords
+        self.coords[1] += self.y_vel
+
 
 def main() -> None:
     """Driver of the Python script"""
@@ -60,6 +66,7 @@ def main() -> None:
                 done = True
 
         # ----------- CHANGE ENVIRONMENT
+        snow.update()
 
         # ----------- DRAW THE ENVIRONMENT
         screen.fill(BGCOLOUR)      # fill with bgcolor
