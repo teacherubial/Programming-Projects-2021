@@ -2,6 +2,7 @@
 # Author: Ubial
 
 
+import random
 import pygame
 
 pygame.init()
@@ -11,7 +12,7 @@ BLACK = (  0,   0,   0)
 RED   = (255,   0,   0)
 GREEN = (  0, 255,   0)
 BLUE  = (  0,   0, 255)
-BGCOLOUR = (100, 100, 255)
+BGCOLOUR = BLACK
 
 SCREEN_WIDTH  = 1024
 SCREEN_HEIGHT = 768
@@ -20,9 +21,23 @@ WINDOW_TITLE  = "Relaxing Snowscape"
 
 
 class Snowflake:
-    """"""
+    """Snowflake on the screen
+
+    Attributes:
+        size: radius of snowflake in px
+        coords: {x: int, y:int}
+        y_vel: falling velocity in px/sec
+        colour: (r, g, b)
+    """
     def __init__(self):
-        pass
+        self.size = 2
+        # randomly place the snow on the screen
+        self.coords = (
+            random.randrange(0, SCREEN_WIDTH),
+            random.randrange(0, SCREEN_HEIGHT)
+        )
+        self.y_vel = 4
+        self.colour = WHITE
 
 def main() -> None:
     """Driver of the Python script"""
@@ -33,6 +48,9 @@ def main() -> None:
     # Create some local variables that describe the environment
     done = False
     clock = pygame.time.Clock()
+
+    # Create one snowflake
+    snow = Snowflake()
 
     # ----------- MAIN LOOP
     while not done:
@@ -45,6 +63,9 @@ def main() -> None:
 
         # ----------- DRAW THE ENVIRONMENT
         screen.fill(BGCOLOUR)      # fill with bgcolor
+
+        # draw the snowflake
+        pygame.draw.circle(screen, snow.colour, snow.coords, snow.size)
 
         # Update the screen
         pygame.display.flip()
