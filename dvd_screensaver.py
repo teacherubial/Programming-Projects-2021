@@ -89,7 +89,7 @@ def main() -> None:
 
     bg_image = pygame.image.load('./images/backgroundimage.jpg')
     # Transform the size of the bg_image
-    bg_image = pygame.transform.scale(bg_image, (980, 540))
+    bg_image = pygame.transform.scale(bg_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
     # ----------- MAIN LOOP
     while not done:
