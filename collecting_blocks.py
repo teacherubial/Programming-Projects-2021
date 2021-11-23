@@ -24,6 +24,27 @@ SCREEN_SIZE   = (SCREEN_WIDTH, SCREEN_HEIGHT)
 WINDOW_TITLE  = "Collecing Blocks"
 
 
+class Player(pygame.sprite.Sprite):
+    """Describes a player object
+    A subclass of pygame.sprite.Sprite
+
+    Attributes:
+        image: Surface that is the visual
+            representation of our Block
+        rect: numerical representation of
+            our Block [x, y, width, height]
+    """
+    def __init__(self) -> None:
+        # Call the superclass constructor
+        super().__init__()
+
+        # Create the image of the block
+        self.image = pygame.image.load("./images/smb_smallmario.png")
+
+        # Based on the image, create a Rect for the block
+        self.rect = self.image.get_rect()
+
+
 class Block(pygame.sprite.Sprite):
     """Describes a block object
     A subclass of pygame.sprite.Sprite
@@ -61,6 +82,7 @@ def main() -> None:
     done = False
     clock = pygame.time.Clock()
     num_blocks = 100
+    score = 0
 
     pygame.mouse.set_visible(False)
 
@@ -83,7 +105,7 @@ def main() -> None:
         all_sprites.add(block)
 
     # Create the Player block
-    player = Block(ETON_BLUE, 20, 15)
+    player = Player()
     # Add the Player to all_sprites group
     all_sprites.add(player)
 
@@ -101,8 +123,14 @@ def main() -> None:
         # Process player movement based on mouse pos
 
         mouse_pos = pygame.mouse.get_pos()
-        player.rect = mouse_pos
+        player.rect.x, player.rect.y = mouse_pos
 
+        # Check all collisions between player and the blocks
+        blocks_collided = pygame.sprite.spritecollide(player, block_sprites, True)
+
+        for block in blocks_collided:
+            score += 1
+            print(f"Score: {score}")
         # ----------- DRAW THE ENVIRONMENT
         screen.fill(BGCOLOUR)      # fill with bgcolor
 
