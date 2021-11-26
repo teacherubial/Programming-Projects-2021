@@ -40,6 +40,7 @@ class Player(pygame.sprite.Sprite):
 
         # Create the image of the block
         self.image = pygame.image.load("./images/smb_smallmario.png")
+        self.image = pygame.transform.scale(self.image, (48, 64))
 
         # Based on the image, create a Rect for the block
         self.rect = self.image.get_rect()
@@ -72,6 +73,35 @@ class Block(pygame.sprite.Sprite):
         # Based on the image, create a Rect for the block
         self.rect = self.image.get_rect()
 
+
+class Enemy(pygame.sprite.Sprite):
+    """The enemy sprites
+
+    Attributes:
+        image: Surface that is the visual representation
+        rect: Rect (x, y, width, height)
+        x_vel: x velocity
+        y_vel: y velocity
+    """
+    def __init__(self):
+        super().__init__()
+
+        self.image = pygame.image.load("./images/smb_goomba.png")
+        # Resize the image (scale)
+        self.image = pygame.transform.scale(self.image, (91, 109))
+
+        self.rect = self.image.get_rect()
+        # Define the initial location
+        self.rect.x, self.rect.y = (
+            random.randrange(SCREEN_WIDTH),
+            random.randrange(SCREEN_HEIGHT)
+        )
+
+        # Define the initial velocity
+        self.x_vel = random.choice([-4, -3, 3, 4])
+        self.y_vel = random.choice([-4, -3, 3, 4])
+
+
 def main() -> None:
     """Driver of the Python script"""
     # Create the screen
@@ -82,6 +112,7 @@ def main() -> None:
     done = False
     clock = pygame.time.Clock()
     num_blocks = 100
+    num_enemies = 10
     score = 0
 
     pygame.mouse.set_visible(False)
@@ -89,6 +120,7 @@ def main() -> None:
     # Create groups to hold Sprites
     all_sprites = pygame.sprite.Group()
     block_sprites = pygame.sprite.Group()
+    enemy_sprites = pygame.sprite.Group()
 
     # Create all the block sprites and add to block_sprites
     for i in range(num_blocks):
@@ -103,6 +135,15 @@ def main() -> None:
         # Add the block to the all_sprites Group
         block_sprites.add(block)
         all_sprites.add(block)
+
+    # Create enemy sprites
+    for i in range(num_enemies):
+        # Create an enemy
+        enemy = Enemy()
+
+        # Add it to the sprites list (enemy_sprites and all_sprites)
+        enemy_sprites.add(enemy)
+        all_sprites.add(enemy)
 
     # Create the Player block
     player = Player()
