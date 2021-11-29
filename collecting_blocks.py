@@ -196,6 +196,14 @@ def main() -> None:
         for block in blocks_collided:
             score += 1
             print(f"Score: {score}")
+
+        # Check all collisions between player and the ENEMIES
+        enemies_collided = pygame.sprite.spritecollide(player, enemy_sprites, False)
+
+        for enemy in enemies_collided:
+            done = True
+            print("GAME OVER!")
+
         # ----------- DRAW THE ENVIRONMENT
         screen.fill(BGCOLOUR)      # fill with bgcolor
 
