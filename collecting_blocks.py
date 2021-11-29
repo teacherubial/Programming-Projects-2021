@@ -1,8 +1,8 @@
 # Collecting Blocks Example
 # Author: Ubial
 
-
 import random
+import time
 import pygame
 
 pygame.init()
@@ -135,6 +135,10 @@ def main() -> None:
     num_blocks = 100
     num_enemies = 10
     score = 0
+    time_start = time.time()
+    time_invincible = 5
+
+    font = pygame.font.SysFont("Arial", 25)
 
     pygame.mouse.set_visible(False)
 
@@ -200,15 +204,23 @@ def main() -> None:
         # Check all collisions between player and the ENEMIES
         enemies_collided = pygame.sprite.spritecollide(player, enemy_sprites, False)
 
-        for enemy in enemies_collided:
-            done = True
-            print("GAME OVER!")
+        # Set a time for invincibility at the beginning of the game
+        if time.time() - time_start > time_invincible:
+            for enemy in enemies_collided:
+                done = True
+                print("GAME OVER!")
 
         # ----------- DRAW THE ENVIRONMENT
         screen.fill(BGCOLOUR)      # fill with bgcolor
 
         # Draw all sprites
         all_sprites.draw(screen)
+
+        # Draw the score on the screen
+        screen.blit(
+            font.render(f"Score: {score}", True, BLACK),
+            (5, 5)
+        )
 
         # Update the screen
         pygame.display.flip()
