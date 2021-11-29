@@ -171,7 +171,7 @@ def main() -> None:
     # Add the Player to all_sprites group
     all_sprites.add(player)
 
-    pygame.mouse.set_visible(False)
+    pygame.mouse.set_visible(True)
 
 
     # ----------- MAIN LOOP
@@ -184,7 +184,8 @@ def main() -> None:
         # ----------- CHANGE ENVIRONMENT
         # Process player movement based on mouse pos
         mouse_pos = pygame.mouse.get_pos()
-        player.rect.x, player.rect.y = mouse_pos
+        player.rect.x = mouse_pos[0] - player.rect.width / 2
+        player.rect.y = mouse_pos[1] - player.rect.height / 2
 
         # Update the location of all sprites
         all_sprites.update()
