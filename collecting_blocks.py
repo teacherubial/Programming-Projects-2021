@@ -18,10 +18,10 @@ BLK_CHOCOLATE = (25, 17, 2)
 
 BGCOLOUR =  WHITE
 
-SCREEN_WIDTH  = 800
+SCREEN_WIDTH =  800
 SCREEN_HEIGHT = 600
 SCREEN_SIZE   = (SCREEN_WIDTH, SCREEN_HEIGHT)
-WINDOW_TITLE  = "Collecing Blocks"
+WINDOW_TITLE  = "Collecting Blocks"
 
 
 class Player(pygame.sprite.Sprite):
@@ -233,7 +233,7 @@ def main() -> None:
         enemies_collided = pygame.sprite.spritecollide(player, enemy_sprites, False)
 
         # Set a time for invincibility at the beginning of the game
-        if time.time() - time_start > time_invincible:
+        if time.time() - time_start > time_invincible and game_state != "won":
             for enemy in enemies_collided:
                 player.hp -= 1
 
