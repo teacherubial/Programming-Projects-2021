@@ -1,5 +1,4 @@
-# Collecting Blocks Example
-# Author: Ubial
+# shmup.py
 
 import random
 import time
@@ -23,6 +22,7 @@ SCREEN_HEIGHT = 600
 SCREEN_SIZE   = (SCREEN_WIDTH, SCREEN_HEIGHT)
 WINDOW_TITLE  = "Collecting Blocks"
 
+BOTTOM_SCREEN_BUFFER = 75
 
 class Player(pygame.sprite.Sprite):
     """Describes a player object
@@ -55,34 +55,6 @@ class Player(pygame.sprite.Sprite):
         return self.hp / 250
 
 
-class Block(pygame.sprite.Sprite):
-    """Describes a block object
-    A subclass of pygame.sprite.Sprite
-
-    Attributes:
-        image: Surface that is the visual
-            representation of our Block
-        rect: numerical representation of
-            our Block [x, y, width, height]
-    """
-    def __init__(self, colour: tuple, width: int, height: int) -> None:
-        """
-        Arguments:
-        :param colour: 3-tuple (r, g, b)
-        :param width: width in pixels
-        :param height: height in pixels
-        """
-        # Call the superclass constructor
-        super().__init__()
-
-        # Create the image of the block
-        self.image = pygame.Surface([width, height])
-        self.image.fill(colour)
-
-        # Based on the image, create a Rect for the block
-        self.rect = self.image.get_rect()
-
-
 class Enemy(pygame.sprite.Sprite):
     """The enemy sprites
 
@@ -95,9 +67,10 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
 
-        self.image = pygame.image.load("./images/smb_goomba.png")
+        self.image = pygame.image.load("./images/spaceinvaders.png")
         # Resize the image (scale)
-        self.image = pygame.transform.scale(self.image, (91, 109))
+        self.image = pygame.transform.scale(self.image, (90, 56))
+        self.image.set_colorkey((255, 255, 255))
 
         self.rect = self.image.get_rect()
         # Define the initial location
@@ -132,6 +105,25 @@ class Enemy(pygame.sprite.Sprite):
             self.y_vel = -self.y_vel
 
 
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self, coords: tuple):
+        super().__init__()
+
+        self.image = pygame.Surface((5, 10))
+        self.image.fill(BLACK)
+        self.rect = self.image.get_rect()
+
+        # Set the middle of the bullet to be at (x, y)
+        self.rect.center = coords
+
+        self.vel_y = 3
+
+
+    def update(self) -> None:
+        """Update location"""
+        self.rect.y -= self.vel_y
+
+
 def main() -> None:
     """Driver of the Python script"""
     # Create the screen
@@ -149,6 +141,9 @@ def main() -> None:
     game_state = "running"
     endgame_cooldown = 5            # seconds
     time_ended = 0.0
+    time_last_enemy_killed = 0
+    enemy_creation_cooldown = 10     # seconds
+    enemy_wave_num = 1
 
     endgame_messages = {
         "win": "Congratulations, you won!",
@@ -161,22 +156,8 @@ def main() -> None:
 
     # Create groups to hold Sprites
     all_sprites = pygame.sprite.Group()
-    block_sprites = pygame.sprite.Group()
     enemy_sprites = pygame.sprite.Group()
-
-    # Create all the block sprites and add to block_sprites
-    for i in range(num_blocks):
-        # Create a block (set its parameters)
-        block = Block(BLACK, 20, 15)
-
-        # Set a random location for the block inside the screen
-        block.rect.x = random.randrange(SCREEN_WIDTH - block.rect.width)
-        block.rect.y = random.randrange(SCREEN_HEIGHT - block.rect.height)
-
-        # Add the block to the block_sprites Group
-        # Add the block to the all_sprites Group
-        block_sprites.add(block)
-        all_sprites.add(block)
+    bullet_sprites = pygame.sprite.Group()
 
     # Create enemy sprites
     for i in range(num_enemies):
@@ -201,6 +182,12 @@ def main() -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
+            if event.type == pygame.MOUSEBUTTONUP:
+                if len(bullet_sprites) < 3 and time.time() - time_start >= time_invincible:
+                    # Create a new bullet
+                    bullet = Bullet(player.rect.midtop)
+                    bullet_sprites.add(bullet)
+                    all_sprites.add(bullet_sprites)
 
         # End-game listener
         if score == num_blocks:
@@ -216,6 +203,11 @@ def main() -> None:
             if time.time() - time_ended >= endgame_cooldown:
                 done = True
 
+        # Kill bullets outside of the screen
+        for bullet in bullet_sprites:
+            if bullet.rect.y <= 0:
+                bullet.kill()
+
         # TODO: LOSE CONDITION - Player's hp goes below 0
         if player.hp_remaining() <= 0:
             done = True
@@ -224,7 +216,10 @@ def main() -> None:
         # Process player movement based on mouse pos
         mouse_pos = pygame.mouse.get_pos()
         player.rect.x = mouse_pos[0] - player.rect.width / 2
-        player.rect.y = mouse_pos[1] - player.rect.height / 2
+        if mouse_pos[1] <= SCREEN_HEIGHT - BOTTOM_SCREEN_BUFFER:
+            player.rect.y = SCREEN_HEIGHT - BOTTOM_SCREEN_BUFFER - player.rect.height / 2
+        else:
+            player.rect.y = mouse_pos[1] - player.rect.height / 2
 
         # Update the location of all sprites
         all_sprites.update()
@@ -237,11 +232,21 @@ def main() -> None:
             for enemy in enemies_collided:
                 player.hp -= 1
 
-            # Check all collisions between player and the blocks
-            blocks_collided = pygame.sprite.spritecollide(player, block_sprites, True)
+        # Bullet Collision with Enemy
+        for bullet in bullet_sprites:
+            enemies_hit = pygame.sprite.spritecollide(bullet, enemy_sprites, True)
 
-            for block in blocks_collided:
+            if len(enemies_hit) > 0:
                 score += 1
+                bullet.kill()
+                time_last_enemy_killed = time.time()
+
+        # Create a new enemy if enemy cooldown valid
+        if time_last_enemy_killed != 0 and time.time() - time_last_enemy_killed >= enemy_creation_cooldown:
+            for i in range(enemy_wave_num):
+                enemy = Enemy()
+                enemy_sprites.add(enemy)
+                all_sprites.add(enemy)
 
         # ----------- DRAW THE ENVIRONMENT
         screen.fill(BGCOLOUR)      # fill with bgcolor
