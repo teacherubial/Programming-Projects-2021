@@ -149,6 +149,10 @@ def main() -> None:
     endgame_cooldown = 5            # seconds
     time_ended = 0.0
 
+    # Check for high score
+    with open("./data/shootemup_highscore.txt") as f:
+        high_score = int(f.readline().strip())
+
     endgame_messages = {
         "win": "Congratulations, you won!",
         "lose": "Sorry, they got you. Play again!",
@@ -183,6 +187,11 @@ def main() -> None:
 
                     bullet_sprites.add(bullet)
                     all_sprites.add(bullet)
+
+        # Listen for the spacebar on keyboard
+        if pygame.key.get_pressed()[pygame.K_SPACE]:
+            # Do something for the keyboard
+            pass
 
 
         # TODO: LOSE CONDITION - Player's hp goes below 0
@@ -243,9 +252,14 @@ def main() -> None:
         all_sprites.draw(screen)
 
         # Draw the score on the screen
+        # Draw the high score
         screen.blit(
             font.render(f"Score: {score}", True, BLACK),
             (5, 5)
+        )
+        screen.blit(
+            font.render(f"High Score: {high_score}", True, BLACK),
+            (5, 28)
         )
 
         # Draw a health bar
@@ -271,9 +285,6 @@ def main() -> None:
     # Clean-up
 
     # Update the high score if the current score is the highest
-    with open("./data/shootemup_highscore.txt") as f:
-        high_score = int(f.readline().strip())
-
     with open("./data/shootemup_highscore.txt", "w") as f:
         if score > high_score:
             f.write(str(score))
