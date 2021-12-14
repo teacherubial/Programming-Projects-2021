@@ -76,8 +76,8 @@ class Block(pygame.sprite.Sprite):
         super().__init__()
 
         # Create the image of the block
-        self.image = pygame.Surface([width, height])
-        self.image.fill(colour)
+        self.image = pygame.image.load("./images/coin.png")
+        self.image = pygame.transform.scale(self.image, (20, 24))
 
         # Based on the image, create a Rect for the block
         self.rect = self.image.get_rect()
@@ -97,7 +97,7 @@ class Enemy(pygame.sprite.Sprite):
 
         self.image = pygame.image.load("./images/smb_goomba.png")
         # Resize the image (scale)
-        self.image = pygame.transform.scale(self.image, (91, 109))
+        self.image = pygame.transform.scale(self.image, (45, 55))
 
         self.rect = self.image.get_rect()
         # Define the initial location
@@ -142,7 +142,7 @@ def main() -> None:
     done = False
     clock = pygame.time.Clock()
     num_blocks = 100
-    num_enemies = 10
+    num_enemies = 20
     score = 0
     time_start = time.time()
     time_invincible = 5             # seconds
@@ -218,7 +218,13 @@ def main() -> None:
 
         # TODO: LOSE CONDITION - Player's hp goes below 0
         if player.hp_remaining() <= 0:
-            done = True
+            game_state = "lose"
+
+            if time_ended == 0:
+                time_ended = time.time()
+
+            if time.time() - time_ended >= endgame_cooldown:
+                done = True
 
         # ----------- CHANGE ENVIRONMENT
         # Process player movement based on mouse pos
@@ -263,11 +269,33 @@ def main() -> None:
         pygame.draw.rect(screen, BLUE, [580, 5, life_remaining, 20])
 
         # If we've won, draw the text on the screen
+        # Draw introduction
+        if time.time() - time_start < time_invincible:
+            text = font.render("Collect as many coins as you can and avoid the goombas!", True, BLACK)
+            shadow = font.render("Collect as many coins as you can and avoid the goombas!", True, WHITE)
+
+            screen.blit(
+                shadow,
+                (
+                    (SCREEN_WIDTH / 2) - text.get_width() / 2 + 2,
+                    (SCREEN_HEIGHT / 2) - text.get_height() / 2 + 2
+                )
+            )
+            screen.blit(
+                text,
+                (
+                    (SCREEN_WIDTH / 2) - text.get_width() / 2,
+                    (SCREEN_HEIGHT / 2) - text.get_height() / 2
+                )
+            )
+
         if game_state == "won":
             screen.blit(
                 font.render(endgame_messages["win"], True, BLACK),
                 (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
             )
+
+
 
         # Update the screen
         pygame.display.flip()

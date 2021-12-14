@@ -163,15 +163,6 @@ def main() -> None:
     enemy_sprites = pygame.sprite.Group()
     bullet_sprites = pygame.sprite.Group()
 
-    # Create enemy sprites
-    for i in range(num_enemies):
-        # Create an enemy
-        enemy = Enemy()
-
-        # Add it to the sprites list (enemy_sprites and all_sprites)
-        enemy_sprites.add(enemy)
-        all_sprites.add(enemy)
-
     # Create the Player block
     player = Player()
     # Add the Player to all_sprites group
@@ -203,6 +194,19 @@ def main() -> None:
         mouse_pos = pygame.mouse.get_pos()
         player.rect.x = mouse_pos[0] - player.rect.width / 2
         player.rect.y = mouse_pos[1] - player.rect.height / 2
+
+        # Check numbers of enemies currently on the screen
+        if len(enemy_sprites) < 1:
+            # Create enemy sprites
+            for i in range(num_enemies):
+                # Create an enemy
+                enemy = Enemy()
+
+                # Add it to the sprites list (enemy_sprites and all_sprites)
+                enemy_sprites.add(enemy)
+                all_sprites.add(enemy)
+
+            num_enemies += 5        # scale the degree of difficulty
 
         # Update the location of all sprites
         all_sprites.update()
@@ -263,6 +267,18 @@ def main() -> None:
 
         # ----------- CLOCK TICK
         clock.tick(75)
+
+    # Clean-up
+
+    # Update the high score if the current score is the highest
+    with open("./data/shootemup_highscore.txt") as f:
+        high_score = int(f.readline().strip())
+
+    with open("./data/shootemup_highscore.txt", "w") as f:
+        if score > high_score:
+            f.write(str(score))
+        else:
+            f.write(str(high_score))
 
 
 if __name__ == "__main__":
