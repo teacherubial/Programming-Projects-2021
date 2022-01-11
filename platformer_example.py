@@ -52,7 +52,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.Surface([width, height])
         self.image.fill(RED)
 
-        # Set a referance to the image rect.
+        # Set a reference to the image rect.
         self.rect = self.image.get_rect()
 
         # Set speed vector of player
@@ -195,10 +195,11 @@ class Level_01(Level):
         Level.__init__(self, player)
 
         # Array with width, height, x, and y of platform
-        level = [[210, 70, 500, 500],
-                 [210, 70, 200, 400],
-                 [210, 70, 600, 300],
-                 ]
+        level = [
+            [210, 70, 500, 500],
+            [210, 70, 200, 400],
+            [210, 70, 600, 300],
+        ]
 
         # Go through the array above and add platforms
         for platform in level:
@@ -223,8 +224,7 @@ def main():
     player = Player()
 
     # Create all the levels
-    level_list = []
-    level_list.append(Level_01(player))
+    level_list = [Level_01(player)]
 
     # Set the current level
     current_level_no = 0
